@@ -24,9 +24,9 @@ const store = createStore({
     },
   },
   actions: {
-    async FETCH_MOVIES(context) {
-      const movies = await fetchMovies()
-      context.commit('setMovies', movies)
+    async FETCH_MOVIES({ commit }, titulo = '') {
+      const movies = await fetchMovies(titulo)
+      commit('setMovies', movies)
     },
   },
   getters: {

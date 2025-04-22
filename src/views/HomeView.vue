@@ -1,9 +1,10 @@
-<script setup></script>
+<script setup>
+import SearchResults from '@/components/SearchResults.vue'
+</script>
 
 <template>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi voluptates, dolore esse,
-    provident beatae officia temporibus adipisci cum minus eaque, maiores iusto! Aut vitae est,
-    pariatur maxime repellendus cumque soluta.
-  </p>
+  <div>
+    <h1>Bem vindo à Dot Flix</h1>
+    <SearchResults :filmes="filmes" />
+  </div>
 </template>
