@@ -1,10 +1,12 @@
 const TOKEN = process.env.TOKEN
 
-export const fetchMovies = async (titulo = '') => {
+export const fetchMovies = async (query = '', page = 1) => {
   const baseUrl = 'https://api.themoviedb.org/3/'
-  let url = titulo
-    ? `${baseUrl}search/movie?language=pt-BR&query=${encodeURIComponent(titulo)}`
-    : `${baseUrl}discover/movie?language=pt-BR&sort_by=popularity.desc`
+
+  let url = query
+    ? `${baseUrl}search/movie?language=pt-BR&query=${encodeURIComponent(query)}&page=${page}`
+    : `${baseUrl}discover/movie?language=pt-BR&sort_by=popularity.desc&page=${page}`
+
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -15,12 +17,17 @@ export const fetchMovies = async (titulo = '') => {
     })
 
     if (!response.ok) {
-      throw new Error('Erro na requisição: ' + response.statusText)
+      throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`)
     }
 
     const data = await response.json()
-    return data.results
+    return {
+      results: data.results,
+      page: data.page,
+      total_pages: data.total_pages,
+    }
   } catch (error) {
     console.error('Erro ao buscar filmes:', error)
+    throw error
   }
 }

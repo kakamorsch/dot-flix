@@ -5,7 +5,11 @@ const store = createStore({
   state: {
     cart: [],
     favorites: [],
-    movies: [],
+    moviesData: {
+      results: [],
+      page: 1,
+      total_pages: 1,
+    },
   },
   mutations: {
     addToCart(state, movie) {
@@ -28,20 +32,37 @@ const store = createStore({
     removeFromFavorites(state, movieId) {
       state.favorites = state.favorites.filter((movie) => movie.id !== movieId)
     },
-    setMovies(state, movies) {
-      state.movies = movies
+    setMoviesData(state, payload) {
+      if (payload.page === 1) {
+        state.moviesData = payload
+      } else {
+        state.moviesData = {
+          ...payload,
+          results: [...state.moviesData.results, ...payload.results],
+        }
+      }
     },
   },
   actions: {
-    async FETCH_MOVIES({ commit }, titulo = '') {
-      const movies = await fetchMovies(titulo)
-      commit('setMovies', movies)
+    async FETCH_MOVIES({ commit }, { query, page = 1 }) {
+      try {
+        const data = await fetchMovies(query, page)
+        commit('setMoviesData', {
+          results: data.results,
+          page: data.page,
+          total_pages: data.total_pages,
+        })
+        return data
+      } catch (error) {
+        console.error('Error fetching movies:', error)
+        throw error
+      }
     },
   },
   getters: {
     cartItems: (state) => state.cart,
     favoriteMovies: (state) => state.favorites,
-    movies: (state) => state.movies,
+    moviesData: (state) => state.moviesData,
   },
 })
 
