@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const TOKEN = process.env.TOKEN
 
 export const fetchMovies = async (query = '', page = 1) => {
