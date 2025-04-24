@@ -23,7 +23,7 @@
               />
             </td>
             <td class="py-2">{{ item.title }}</td>
-            <td class="py-2">R$ 9,99</td>
+            <td class="py-2">R$ 19,99</td>
           </tr>
         </tbody>
       </table>
