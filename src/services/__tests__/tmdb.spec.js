@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-env node */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { fetchMovies } from '../tmdb'
