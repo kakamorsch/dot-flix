@@ -102,33 +102,14 @@
         </div>
         <div v-else>
           <div class="space-y-3">
-            <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
-              <img
-                :src="`https://image.tmdb.org/t/p/w500${item.poster_path}`"
-                :alt="item.title"
-                class="w-12 h-16 object-cover rounded"
-              />
-              <div class="flex-1">
-                <h4 class="text-sm font-medium">{{ item.title }}</h4>
-                <div class="text-sm text-gray-500">R$ 19,99</div>
-              </div>
-              <button @click="removeFromCart(item)" class="text-red-500 hover:text-red-700">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
+            <MovieItem
+              v-for="item in cartItems"
+              :key="item.id"
+              :item="item"
+              context="cart"
+              :isInCart="true"
+              @remove-from-cart="removeFromCart"
+            />
           </div>
           <div class="mt-6 pt-4 border-t">
             <div class="flex justify-between items-center text-lg font-bold">
@@ -149,6 +130,7 @@ import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import SuccessModal from '../components/SuccessModal.vue'
 import { cpfMask, phoneMask, cepMask, isValidEmail, createMaskedInputHandler } from '../utils/masks'
+import MovieItem from '../components/MovieItem.vue'
 
 const store = useStore()
 
