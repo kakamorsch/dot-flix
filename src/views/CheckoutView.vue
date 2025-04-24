@@ -2,123 +2,8 @@
   <div class="max-w-4xl mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">Finalizar Compra</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <form @submit.prevent="submitOrder" class="space-y-4">
-        <div>
-          <label for="name" class="block text-sm font-medium mb-1">Nome Completo</label>
-          <input
-            id="name"
-            v-model="name"
-            type="text"
-            required
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Digite seu nome"
-          />
-        </div>
-        <div>
-          <label for="email" class="block text-sm font-medium mb-1">
-            E-mail
-            <span v-if="email && !isValidEmail(email)" class="text-red-500 text-xs ml-1">
-              (E-mail inválido)
-            </span>
-          </label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            required
-            :class="{
-              'border-red-500': email && !isValidEmail(email),
-              'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2': true,
-              'focus:ring-red-500': email && !isValidEmail(email),
-              'focus:ring-indigo-500': !email || isValidEmail(email),
-            }"
-            placeholder="Digite seu e-mail"
-          />
-        </div>
-        <div>
-          <label for="cpf" class="block text-sm font-medium mb-1">CPF</label>
-          <input
-            id="cpf"
-            :value="cpf"
-            @input="handleCpfInput"
-            type="text"
-            required
-            maxlength="14"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="000.000.000-00"
-          />
-        </div>
-        <div>
-          <label for="phone" class="block text-sm font-medium mb-1">Telefone</label>
-          <input
-            id="phone"
-            :value="phone"
-            @input="handlePhoneInput"
-            type="tel"
-            required
-            maxlength="15"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="(00) 00000-0000"
-          />
-        </div>
-        <div>
-          <label for="cep" class="block text-sm font-medium mb-1">CEP</label>
-          <input
-            id="cep"
-            :value="cep"
-            @input="handleCepInput"
-            type="text"
-            required
-            maxlength="9"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="00000-000"
-          />
-        </div>
-        <div>
-          <label for="address" class="block text-sm font-medium mb-1">Endereço</label>
-          <textarea
-            id="address"
-            v-model="address"
-            required
-            rows="3"
-            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Digite seu endereço completo"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          class="w-full bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition"
-          :disabled="!isFormValid || cartItems.length === 0"
-          :class="{ 'opacity-50 cursor-not-allowed': !isFormValid || cartItems.length === 0 }"
-        >
-          Finalizar
-        </button>
-      </form>
-
-      <div class="bg-gray-50 p-6 rounded-lg">
-        <h2 class="text-lg font-semibold mb-4">Resumo do Pedido</h2>
-        <div v-if="cartItems.length === 0" class="text-gray-500 text-center py-8">
-          Seu carrinho está vazio
-        </div>
-        <div v-else>
-          <div class="space-y-3">
-            <MovieItem
-              v-for="item in cartItems"
-              :key="item.id"
-              :item="item"
-              context="cart"
-              :isInCart="true"
-              @remove-from-cart="removeFromCart"
-            />
-          </div>
-          <div class="mt-6 pt-4 border-t">
-            <div class="flex justify-between items-center text-lg font-bold">
-              <span>Total:</span>
-              <span>R$ {{ (cartItems.length * 19.99).toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CheckoutForm @submit="submitOrder" />
+      <CheckoutCartSummary :cartItems="cartItems" />
     </div>
 
     <SuccessModal :show="showSuccessModal" :user-name="name" @close="closeSuccessModal" />
@@ -126,45 +11,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import SuccessModal from '../components/SuccessModal.vue'
-import { cpfMask, phoneMask, cepMask, isValidEmail, createMaskedInputHandler } from '../utils/masks'
-import MovieItem from '../components/MovieItem.vue'
+import CheckoutCartSummary from '../components/CheckoutCartSummary.vue'
+import CheckoutForm from '../components/CheckoutForm.vue'
 
 const store = useStore()
 
-const name = ref('')
-const email = ref('')
-const cpf = ref('')
-const phone = ref('')
-const cep = ref('')
-const address = ref('')
-const showSuccessModal = ref(false)
-
 const cartItems = computed(() => store.state.cart)
 
-const handleCpfInput = createMaskedInputHandler(cpfMask, (value) => (cpf.value = value))
-const handlePhoneInput = createMaskedInputHandler(phoneMask, (value) => (phone.value = value))
-const handleCepInput = createMaskedInputHandler(cepMask, (value) => (cep.value = value))
+const showSuccessModal = ref(false)
 
-const isFormValid = computed(() => {
-  return (
-    name.value.trim() &&
-    email.value.trim() &&
-    isValidEmail(email.value) &&
-    cpf.value.length === 14 && // XXX.XXX.XXX-XX
-    phone.value.length >= 14 && // (XX) XXXXX-XXXX
-    cep.value.length === 9 && // XXXXX-XXX
-    address.value.trim()
-  )
-})
+const name = ref('')
 
-const removeFromCart = (item) => {
-  store.commit('removeFromCart', item.id)
-}
-
-const submitOrder = () => {
+const submitOrder = (formData) => {
+  if (formData && formData.name) {
+    name.value = formData.name
+  }
   store.commit('CLEAR_CART')
   showSuccessModal.value = true
 }
