@@ -6,8 +6,9 @@
         :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
         :alt="movie.title"
       />
-      <!-- Data de lançamento -->
-      <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2">
+      <div
+        class="flex flex-col items-center justify-center bottom-0 w-full bg-black bg-opacity-60 text-white p-2"
+      >
         <span class="text-xs font-medium"> Lançamento: {{ formattedReleaseDate }} </span>
       </div>
     </div>
@@ -36,7 +37,6 @@
       <div class="p-3 flex flex-col items-center justify-center">
         <h3 class="text-sm font-semibold truncate">{{ movie.title }}</h3>
 
-        <!-- Exibição dos gêneros -->
         <div class="flex flex-wrap gap-1 my-1">
           <span
             v-for="genre in genres"
@@ -48,7 +48,6 @@
           </span>
         </div>
 
-        <!-- Classificação com estrela -->
         <div class="flex items-center gap-1 mt-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"

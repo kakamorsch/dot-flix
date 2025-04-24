@@ -140,7 +140,6 @@
       </div>
     </div>
 
-    <!-- Success Modal -->
     <SuccessModal :show="showSuccessModal" :user-name="name" @close="closeSuccessModal" />
   </div>
 </template>
@@ -163,7 +162,6 @@ const showSuccessModal = ref(false)
 
 const cartItems = computed(() => store.state.cart)
 
-// Create masked input handlers
 const handleCpfInput = createMaskedInputHandler(cpfMask, (value) => (cpf.value = value))
 const handlePhoneInput = createMaskedInputHandler(phoneMask, (value) => (phone.value = value))
 const handleCepInput = createMaskedInputHandler(cepMask, (value) => (cep.value = value))

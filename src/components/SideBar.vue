@@ -3,7 +3,6 @@
     class="fixed top-0 right-0 h-screen w-80 bg-white shadow-lg transform transition-transform duration-300"
     style="margin-top: 80px; height: calc(100vh - 80px)"
   >
-    <!-- Header -->
     <div class="p-4 border-b flex justify-between items-center">
       <h2 class="text-lg font-semibold">
         {{ content === 'cart' ? 'Meu Carrinho' : 'Meus Favoritos' }}
@@ -31,9 +30,7 @@
       </button>
     </div>
 
-    <!-- Content with Scroll -->
     <div class="overflow-y-auto h-full pb-20">
-      <!-- Cart Content -->
       <div v-if="content === 'cart'" class="p-4">
         <div v-if="cartItems.length === 0" class="text-gray-500 text-center py-8">
           Seu carrinho está vazio
@@ -94,7 +91,6 @@
         </div>
       </div>
 
-      <!-- Favorites Content -->
       <div v-else class="p-4">
         <div v-if="favoriteMovies.length === 0" class="text-gray-500 text-center py-8">
           Você ainda não tem favoritos

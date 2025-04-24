@@ -31,7 +31,7 @@
           type="text"
           placeholder="Buscar filmes..."
           v-model="searchTerm"
-          @input="onInput"
+          @input="debouncedInput"
           class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
@@ -111,7 +111,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-// TODO: componentizar ícones
+
 defineProps({
   showSidebar: {
     type: Boolean,
@@ -128,11 +128,15 @@ defineEmits(['toggle-sidebar'])
 const store = useStore()
 const searchTerm = ref('')
 const router = useRouter()
+let debounceTimeout = null
 
 const cartItemsCount = computed(() => store.state.cart.length)
 const favoritesCount = computed(() => store.state.favorites.length)
 
-const onInput = () => {
-  router.push({ path: '/', query: { q: searchTerm.value } })
+const debouncedInput = () => {
+  clearTimeout(debounceTimeout)
+  debounceTimeout = setTimeout(() => {
+    router.push({ path: '/', query: { q: searchTerm.value } })
+  }, 300) // 300ms de debounce
 }
 </script>
