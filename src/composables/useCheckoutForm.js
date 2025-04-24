@@ -17,15 +17,15 @@ export function useCheckoutForm() {
 
   const isFormValid = computed(() => {
     return (
-      name.value.trim() &&
-      email.value.trim() &&
+      Boolean(name.value.trim()) &&
+      Boolean(email.value.trim()) &&
       isValidEmail(email.value) &&
       cpf.value.length === 14 && // XXX.XXX.XXX-XX
       phone.value.length >= 14 && // (XX) XXXXX-XXXX
       cep.value.length === 9 && // XXXXX-XXX
-      address.value.trim() &&
-      city.value.trim() &&
-      state.value.trim()
+      Boolean(address.value.trim()) &&
+      Boolean(city.value.trim()) &&
+      Boolean(state.value.trim())
     )
   })
 

@@ -50,7 +50,9 @@ describe('SearchResults.vue', () => {
     return mount(SearchResults, {
       global: {
         stubs: {
-          MovieCard: true,
+          MovieCard: {
+            template: '<div />',
+          },
         },
       },
     })

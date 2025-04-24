@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
 const TOKEN = process.env.TOKEN
 
+if (!TOKEN) {
+  throw new Error('TOKEN environment variable is not set. Please set it to access the TMDB API.')
+}
+
 export const fetchMovies = async (query = '', page = 1) => {
   const baseUrl = 'https://api.themoviedb.org/3/'
 
