@@ -38,8 +38,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-
 defineProps({
   cartItems: {
     type: Array,
